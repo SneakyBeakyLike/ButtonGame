@@ -1,12 +1,10 @@
 package com.buttongame.ellak.buttongame;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +25,8 @@ public class Game extends Activity implements View.OnClickListener {
     int lcounter =0;
     int tmp = 0;
     Button[] buttons = new Button[9];
+    Button exit;
+    Button scshow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +40,10 @@ public class Game extends Activity implements View.OnClickListener {
         buttons[6]= (Button) findViewById(R.id.button7);
         buttons[7]= (Button) findViewById(R.id.button8);
         buttons[8]= (Button) findViewById(R.id.button9);
+        exit = (Button) findViewById(R.id.exitbt);
+        scshow = (Button) findViewById(R.id.scorebt);
+        exit.setOnClickListener(this);
+        scshow.setOnClickListener(this);
         tv = (TextView) findViewById(R.id.tv);
         tv.setText("hits: "+String.valueOf(counter));
         tv2 = (TextView) findViewById(R.id.tv2);
@@ -59,7 +63,7 @@ public class Game extends Activity implements View.OnClickListener {
         if (timer == null) {
             timer = new Timer();
         }
-        timer.schedule(task,1000,1000);
+        timer.schedule(task,2000,1000);
         task = new TimerTask() {
             @Override
             public void run() {
@@ -97,26 +101,53 @@ public class Game extends Activity implements View.OnClickListener {
                 buttons[rand].setVisibility(View.INVISIBLE);
                 lcounter++;
                 tv2.setText("lost hits: " + String.valueOf(lcounter));
+                if(lcounter==20){
+                    submitScore();
+                }
             }
         }
     };
 
-    public void DoHandlerInvis(){
-        Timer tim = new Timer();
-        TimerTask tsk = new TimerTask() {
-            @Override
-            public void run() {
-                myHandler.post(myRun);
-            }
-        };
-        tim.schedule(tsk,500,1000);
-    }
+
 
     @Override
     public void onClick(View v) {
-        tmp = counter;
-        counter++;
-        tv.setText("hits: "+String.valueOf(counter));
-        v.setVisibility(View.INVISIBLE);
+        if(v == scshow){
+            Intent inte = new Intent(this,ScoreView.class);
+            startActivity(inte);
+        }
+        else if(v == exit){
+            timer.cancel();
+            timer.purge();
+            finish();
+        }
+        else{
+            tmp = counter;
+            counter++;
+            tv.setText("hits: " + String.valueOf(counter));
+            v.setVisibility(View.INVISIBLE);
+        }
+
     }
+
+    public void submitScore(){
+        Intent intent = new Intent(this,ScoreSubmit.class);
+        Bundle bu = new Bundle();
+        bu.putInt("score",counter);
+        intent.putExtras(bu);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onRestart(){
+        lcounter = 0;
+        counter = 0;
+        tv.setText("hits: "+counter);
+        tv2.setText("lost hits: "+lcounter);
+        super.onRestart();
+    }
+
+
 }
+
+
