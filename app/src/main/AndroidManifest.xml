@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ScoreSubmit"
+            android:label="@string/title_activity_score_submit" >
+        </activity>
+        <activity
+            android:name=".ScoreView"
+            android:label="@string/title_activity_score_view" >
+        </activity>
     </application>
 
 </manifest>

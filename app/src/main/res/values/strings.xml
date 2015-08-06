@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_score_submit">ScoreSubmit</string>
+    <string name="title_activity_score_view">ScoreView</string>
 </resources>
